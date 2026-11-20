@@ -1,0 +1,529 @@
+/* ==========================================================================
+   Reset
+   ========================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+img,
+picture,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+p,
+h1,
+h2,
+h3 {
+  overflow-wrap: break-word;
+}
+
+/* ==========================================================================
+   Design tokens (light is the default, dark overrides below)
+   ========================================================================== */
+:root {
+  /* colors */
+  --bg: linear-gradient(180deg, #ebf2fc 0%, #eef8f9 100%);
+  --surface: #fff;
+  --card-bg: hsl(200, 60%, 99%);
+  --card-border: hsl(0, 0%, 93%);
+  --border: hsl(0, 0%, 78%);
+  --text: hsl(227, 75%, 14%);
+  --text-muted: hsl(226, 11%, 37%);
+  --red: hsl(3, 77%, 44%);
+  --red-remove: #dc3545;
+  --on-accent: hsl(200, 60%, 99%);
+  --white: #fff;
+  --toggle-bg: hsl(0, 0%, 93%);
+  --toggle-bg-hover: hsl(0, 0%, 78%);
+  --switch-off: hsl(0, 0%, 46%);
+  --shadow: hsl(217, 61%, 90%);
+
+  /* sizes */
+  --content-width: clamp(14rem, 90vw, 80rem);
+  --font-base: 1rem;
+  --font-card-title: 1.2rem;
+
+  /* motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --card-shadow: 0 12px 28px hsla(226, 45%, 30%, 0.14);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: linear-gradient(180deg, #040918 0%, #091540 100%);
+  --surface: hsl(226, 25%, 17%);
+  --card-bg: hsl(226, 25%, 17%);
+  --card-border: hsl(226, 11%, 37%);
+  --border: hsl(226, 11%, 37%);
+  --text: hsl(0, 0%, 93%);
+  --text-muted: hsl(0, 0%, 78%);
+  --red: hsl(3, 86%, 64%);
+  --on-accent: hsl(227, 75%, 14%);
+  --toggle-bg: hsl(226, 11%, 37%);
+  --toggle-bg-hover: hsl(226, 11%, 45%);
+  --switch-off: hsl(226, 11%, 55%);
+  --shadow: transparent;
+  --card-shadow: 0 12px 28px hsla(226, 60%, 3%, 0.55);
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+body {
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  font-family: "Noto Sans", sans-serif;
+  font-size: var(--font-base);
+  font-weight: 400;
+  color: var(--text);
+  background: var(--bg);
+  background-attachment: fixed;
+}
+
+.wrapper {
+  width: var(--content-width);
+  margin-inline: auto;
+}
+
+/* ==========================================================================
+   Header
+   ========================================================================== */
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-block: 1.5rem;
+  padding: 0.5rem;
+  background-color: var(--surface);
+  border-radius: 0.4rem;
+  box-shadow: 0 4px 5px var(--shadow);
+}
+
+.site-header__logo svg {
+  width: 8.5rem;
+}
+
+/* The logo text is hardcoded dark in the SVG, so CSS overrides it per theme */
+.site-header__logo svg path[fill="#091540"] {
+  fill: var(--text);
+}
+
+.theme-toggle {
+  padding: 0.5rem;
+  color: var(--text);
+  background-color: var(--toggle-bg);
+  border-radius: 0.4rem;
+}
+
+.theme-toggle svg {
+  width: 1.1rem;
+}
+
+.theme-toggle svg path {
+  stroke: currentColor;
+}
+
+.theme-toggle__sun {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-toggle__moon {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-toggle__sun {
+  display: block;
+}
+
+.theme-toggle:hover {
+  background-color: var(--toggle-bg-hover);
+}
+
+.theme-toggle:active,
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 1px;
+}
+
+/* ==========================================================================
+   Page head and filters
+   ========================================================================== */
+.page-head {
+  display: grid;
+  justify-items: center;
+}
+
+.filters {
+  display: flex;
+  gap: 0.75rem;
+  margin-block: 1rem;
+}
+
+.filter-btn {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+
+  padding: 0.3rem 1rem;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 2rem;
+  font-size: var(--font-base);
+  color: var(--text);
+
+  transition: color 0.3s linear;
+}
+
+.filter-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--red);
+  border-radius: inherit;
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.35s ease;
+}
+
+.filter-btn:hover::before,
+.filter-btn:active::before,
+.filter-btn:focus-visible::before,
+.filter-btn.active::before {
+  transform: scaleY(1);
+}
+
+.filter-btn:hover,
+.filter-btn:active,
+.filter-btn:focus-visible,
+.filter-btn.active {
+  color: var(--on-accent);
+}
+
+.filter-btn:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Cards
+   ========================================================================== */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-block: 1rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 0.8rem;
+}
+
+.card__top {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.4rem;
+}
+
+.card__logo {
+  flex-shrink: 0;
+  width: 3rem;
+  height: 3rem;
+}
+
+.card__title {
+  font-size: var(--font-card-title);
+}
+
+.card__desc {
+  font-size: var(--font-base);
+  color: var(--text-muted);
+}
+
+.card__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.card__remove {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+
+  padding: 0.2rem 0.8rem;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 2rem;
+  font-size: var(--font-base);
+
+  transition: color 0.3s linear;
+}
+
+.card__remove::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--red-remove);
+  border-radius: inherit;
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.3s ease;
+}
+
+.card__remove:hover::before,
+.card__remove:focus-visible::before {
+  transform: scaleY(1);
+}
+
+.card__remove:hover,
+.card__remove:focus-visible {
+  color: var(--white);
+}
+
+.card__remove:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+}
+
+.empty {
+  margin-block: 2rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   Switch
+   ========================================================================== */
+.switch {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+  width: 36px;
+  height: 20px;
+}
+
+.switch__input {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.switch__slider {
+  position: absolute;
+  inset: 0;
+  background-color: var(--switch-off);
+  border-radius: 999px;
+  transition: background-color 0.3s ease;
+}
+
+.switch__slider::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background-color: var(--white);
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.switch__input:checked + .switch__slider {
+  background-color: var(--red);
+}
+
+.switch__input:checked + .switch__slider::before {
+  transform: translateX(16px);
+}
+
+.switch__input:focus-visible + .switch__slider {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Motion
+   Only transform, opacity and shadows are animated. They are cheap to render.
+   ========================================================================== */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Page load: header, title and filters rise one after another */
+.site-header,
+.page-head h1,
+.filters {
+  animation: rise 0.7s var(--ease-out) backwards;
+}
+
+.page-head h1 {
+  animation-delay: 0.1s;
+}
+
+.filters {
+  animation-delay: 0.2s;
+}
+
+/* Cards rise in a stagger on the first render only (script.js toggles .cards--intro) */
+.cards--intro .card {
+  animation: rise 0.7s var(--ease-out) backwards;
+  animation-delay: calc(0.3s + var(--i, 0) * 50ms);
+}
+
+.empty:not([hidden]) {
+  animation: fade-in 0.4s ease;
+}
+
+/* Card hover: lift, soft shadow, logo pops */
+.card {
+  transition:
+    transform 0.35s var(--ease-out),
+    box-shadow 0.35s var(--ease-out),
+    border-color 0.35s ease;
+}
+
+.card__logo {
+  transition: transform 0.4s var(--ease-spring);
+}
+
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border);
+    box-shadow: var(--card-shadow);
+  }
+
+  .card:hover .card__logo {
+    transform: scale(1.1) rotate(-4deg);
+  }
+
+  .theme-toggle:hover svg {
+    transform: rotate(18deg);
+  }
+}
+
+/* Press feedback on buttons */
+.filter-btn,
+.card__remove {
+  transition:
+    color 0.3s linear,
+    transform 0.2s var(--ease-out);
+}
+
+.theme-toggle {
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s var(--ease-out);
+}
+
+.theme-toggle svg {
+  transition: transform 0.4s var(--ease-spring);
+}
+
+.filter-btn:active,
+.card__remove:active,
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
+/* Switch: springy thumb that stretches while pressed */
+.switch__slider::before {
+  transition:
+    transform 0.35s var(--ease-spring),
+    width 0.2s var(--ease-out);
+}
+
+.switch__input:active + .switch__slider::before {
+  width: 20px;
+}
+
+.switch__input:checked:active + .switch__slider::before {
+  transform: translateX(12px);
+}
+
+/* ==========================================================================
+   Theme transition (View Transitions API cross-fade)
+   ========================================================================== */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.45s;
+  animation-timing-function: ease;
+}
+
+/* Cards sliding into place after a remove or filter change */
+::view-transition-group(*) {
+  animation-duration: 0.35s;
+  animation-timing-function: ease;
+}
+
+/* ==========================================================================
+   Reduced motion
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+  }
+
+  .card:hover,
+  .card:hover .card__logo,
+  .theme-toggle:hover svg {
+    transform: none;
+  }
+}
